@@ -3,17 +3,32 @@ require 'json'
 gem "minitest"
 require 'minitest/autorun'
 require 'minitest/spec'
-
+require "mediaelement_test_spec"
 include RestJsonValidator
+include MediaelementTestSpec
+
+class Tester < JsonValidator
+  def initialize
+    @bugs = []
+    super
+
+  end
+
+  def notify message
+    @bugs << message
+  end
+end
 
 class RestJsonValidatorTest < Minitest::Spec
 
-  #implement test here
-  # def test_all_agents_have_a_device
-  #   puts "The USER_AGENTS contains streaming specifications for these platforms: #{USER_AGENTS.keys}."
-  #   USER_AGENTS.keys.each do |platform|
-  #     assert USER_AGENTS[platform][:device].class == String
-  #     assert USER_AGENTS[platform][:device] != ""
-  #   end
-  # end
+  def test_the_mediaelement_has_the_expected_specification
+    tester = Tester.new
+    tester.add_listener self
+    mediaelement = JSON.parse open("./test/mediaelement.json").read()
+    tester.validate_json_api_compliance(mediaelement, MEDIAELEMENT_V9_CHECKS )
+
+  end
+
+
+
 end

@@ -81,6 +81,7 @@ module RestJsonValidator
     end
 
     def validate_json(json, api, level)
+      puts "son: #{json} api: #{api} level: #{level}"
       key_diff(json, api, level)
       run_field_validators(json, api, level)
     end
@@ -102,13 +103,13 @@ module RestJsonValidator
       end
     end
 
-    def validate_json_api_compliance(json, api, level=0)
-      return unless [Hash, Array].include? api.class
+    def validate_json_api_compliance(actual_json, specification, level=0)
+      return unless [Hash, Array].include? specification.class
       level += 1
-      if json.class == Array
-        depth_validate_array(json, api[0][:data], level, api[0][:content_checker])
-      elsif json.class == Hash
-        depth_validate_hash(json, api, level)
+      if actual_json.class == Array
+        depth_validate_array(actual_json, specification[0][:data], level, specification[0][:content_checker])
+      elsif actual_json.class == Hash
+        depth_validate_hash(actual_json, specification, level)
       end
     end
 
@@ -123,6 +124,8 @@ module RestJsonValidator
       api_keys.delete(:optionals)
       json_keys = json.keys
       diff      = []
+      puts "api_keys: #{api_keys.sort}"
+      puts "json_keys: #{json_keys.sort}"
       if api_keys.sort != json_keys.sort
         extra_api = api_keys - json_keys
         extra_json = json_keys - api_keys
