@@ -19,9 +19,9 @@ class Tester < JsonValidator
   end
 
   def num_bugs
-    # @bugs.each do |b|
-    #   puts b
-    # end
+    @bugs.each do |b|
+      puts b
+    end
     @bugs.length
   end
 end
