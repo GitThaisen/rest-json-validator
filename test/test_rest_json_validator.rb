@@ -17,6 +17,13 @@ class Tester < JsonValidator
   def notify message
     @bugs << message
   end
+
+  def num_bugs
+    # @bugs.each do |b|
+    #   puts b
+    # end
+    @bugs.length
+  end
 end
 
 class RestJsonValidatorTest < Minitest::Spec
@@ -26,6 +33,8 @@ class RestJsonValidatorTest < Minitest::Spec
     tester.add_listener self
     mediaelement = JSON.parse open("./test/mediaelement.json").read()
     tester.validate_json_api_compliance(mediaelement, MEDIAELEMENT_V9_CHECKS )
+    assert_equal 0, tester.num_bugs, "Expected no errors found here"
+
 
   end
 
