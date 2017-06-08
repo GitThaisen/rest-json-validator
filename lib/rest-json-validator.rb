@@ -53,7 +53,7 @@ module RestJsonValidator
     def find_id(json)
       id = nil
       if json.nil?
-        puts "Trying to find id in a nil object (expected a json structure)"
+        puts "Warning: Trying to find id in a nil object (expected a actual_json structure)"
       elsif json.has_key? 'id'
         id = json['id']
       elsif json.has_key? 'programId'
@@ -64,31 +64,32 @@ module RestJsonValidator
       id
     end
 
-    def run_field_validators(json, api, level)
-       if is_sub_composite_checker?(api)
-         send(api[:sub_composite_checker], json, find_id(json), 'vetikke')
+    def run_field_validators(actual_json, specification, level)
+       if is_sub_composite_checker?(specification)
+         send(specification[:sub_composite_checker], actual_json, find_id(actual_json), 'vetikke')
        else
-      api.keys.each do |api_key|
-        api_element = api[api_key]
-        id          = find_id(json)
+      specification.keys.each do |api_key|
+        api_element = specification[api_key]
+        id          = find_id(actual_json)
         if is_field_validator?(api_element, api_key)
-          send(api_element, json[api_key], id, api_key)
+          send(api_element, actual_json[api_key], id, api_key)
         elsif is_composite_checker?(api_element)
-          send(api_element[:composite_checker], json[api_key], id, api_key)
+          send(api_element[:composite_checker], actual_json[api_key], id, api_key)
         end
       end
        end
     end
 
-    def validate_json(json, api, level)
-      key_diff(json, api, level)
-      run_field_validators(json, api, level)
+    def validate_json(actual_json, specification, level)
+      # puts "son: #{actual_json} api: #{api} level: #{level}"
+      key_diff(actual_json, specification, level)
+      run_field_validators(actual_json, specification, level)
     end
 
-    def depth_validate_array(json, api, level, content_checker=nil)
-      send(content_checker.intern, json, @media_id, level) unless content_checker.nil?
-      json.each do |json_element|
-        validate_json_api_compliance(json_element, api, level)
+    def depth_validate_array(actual_json, specification, level, content_checker=nil)
+      send(content_checker.intern, actual_json, @media_id, level) unless content_checker.nil?
+      actual_json.each do |json_element|
+        validate_json_api_compliance(json_element, specification, level)
       end
     end
 
@@ -102,26 +103,26 @@ module RestJsonValidator
       end
     end
 
-    def validate_json_api_compliance(json, api, level=0)
-      return unless [Hash, Array].include? api.class
+    def validate_json_api_compliance(actual_json, specification, level=0)
+      return unless [Hash, Array].include? specification.class
       level += 1
-      if json.class == Array
-        depth_validate_array(json, api[0][:data], level, api[0][:content_checker])
-      elsif json.class == Hash
-        depth_validate_hash(json, api, level)
+      if actual_json.class == Array
+        depth_validate_array(actual_json, specification[0][:data], level, specification[0][:content_checker])
+      elsif actual_json.class == Hash
+        depth_validate_hash(actual_json, specification, level)
       end
     end
 
-    def key_diff(json, api, level)
+    def key_diff(actual_json, specification, level)
       optionals = []
-      if api.respond_to?(:has_key?)
-        optionals = api.has_key?(:optionals) ? api[:optionals].keys : []
+      if specification.respond_to?(:has_key?)
+        optionals = specification.has_key?(:optionals) ? specification[:optionals].keys : []
       end
-      api_keys = api.keys
+      api_keys = specification.keys
       api_keys.delete(:composite_checker)
       api_keys.delete(:sub_composite_checker)
       api_keys.delete(:optionals)
-      json_keys = json.keys
+      json_keys = actual_json.keys
       diff      = []
       if api_keys.sort != json_keys.sort
         extra_api = api_keys - json_keys
@@ -129,9 +130,9 @@ module RestJsonValidator
         if extra_json.length == 0 and (extra_api - optionals).length == 0
           return
         else
-          diff << 'api - json: '
+          diff << 'specification - actual_json: '
           diff << api_keys - json_keys
-          diff << 'json - api: '
+          diff << 'actual_json - specification: '
           diff << json_keys - api_keys
           message = ("Nivå #{level}-feil\n(#{@stack.join('.')})\nfor #{@url}\ndiff: #{diff}\n")
           notify message: message

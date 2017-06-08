@@ -1,0 +1,132 @@
+{
+  "_links": {
+    "self": {
+      "href": "/mediaelement/p3"
+    },
+    "parent": {
+      "href": "/"
+    }
+  },
+  "id": "p3",
+  "title": "NRK P3",
+  "playability": "playable",
+  "streamingMode": "live",
+  "duration": null,
+  "legalAge": {
+    "legalReference": "LOV2015-02-06-7",
+    "body": {
+      "status": "exempt"
+    }
+  },
+  "availability": {
+    "information": "",
+    "isGeoBlocked": false,
+    "onDemand": null,
+    "live": {
+      "type": "channel",
+      "isOngoing": true,
+      "transmissionInterval": null
+    },
+    "externalEmbeddingAllowed": true
+  },
+  "statistics": {
+    "scores": {
+      "springStreamSite": "test",
+      "springStreamStream": "programspiller/live/p3",
+      "springStreamContentType": "desktop",
+      "springStreamProgramId": ""
+    },
+    "akamai": {
+      "config": {
+        "beacon": "https://analytics.net/beacon.xml"
+      },
+      "data": {
+        "show": null,
+        "title": "p3",
+        "category": null,
+        "contentLength": null,
+        "device": "desktop",
+        "playerId": "hls",
+        "deliveryType": "L",
+        "playerInfo": "desktop",
+        "cdnName": "Akamai"
+      }
+    },
+    "ga": {
+      "dimension1": "live:p3",
+      "dimension2": "NRK P3",
+      "dimension3": "",
+      "dimension4": "",
+      "dimension5": "",
+      "dimension10": "live:p3",
+      "dimension21": "",
+      "dimension22": "",
+      "dimension23": null,
+      "dimension25": "audio",
+      "dimension26": "live"
+    }
+  },
+  "preplay": {
+    "poster": {
+      "images": [
+        {
+
+          "url": "image_path",
+          "pixelWidth": 300
+        },
+        {
+          "url": "image_path",
+          "pixelWidth": 600
+        },
+        {
+          "url": "image_path",
+          "pixelWidth": 960
+        },
+        {
+          "url": "image_path",
+          "pixelWidth": 1280
+        },
+        {
+          "url": "image_path",
+          "pixelWidth": 1600
+        },
+        {
+          "url": "image_path",
+          "pixelWidth": 1920
+        }
+      ]
+    }
+  },
+  "playable": {
+    "endSequenceStartTime": null,
+    "sourceMedium": "audio",
+    "parts": [
+      {
+        "part": 1,
+        "duration": null,
+        "description": "beskrivelse av innholdet"
+        "assets": [
+          {
+            "url": "http://radio_url/master.m3u8",
+            "format": "HLS",
+            "mimeType": "application/vnd.apple.mpegurl",
+            "encrypted": false
+          },
+          {
+            "url": "http://radio_url/manifest.f4m",
+            "format": "HDS",
+            "mimeType": "application/adobe-f4m",
+            "encrypted": false
+          }
+        ],
+        "liveBuffer": {
+          "bufferStartTime": null,
+          "bufferDuration": "PT3H"
+        },
+        "subtitles": [],
+        "indexPoints": []
+      }
+    ]
+  },
+  "nonPlayable": null
+}
