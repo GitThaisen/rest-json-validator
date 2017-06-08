@@ -9,7 +9,7 @@ module MediaelementTestSpec
           },
       },
       'id'                  => {},
-      'title'               => {},
+      'title'               => :check_title,
       'playability'         => {},
       "streamingMode"       => {},
       "duration"            => {},
@@ -98,6 +98,7 @@ module MediaelementTestSpec
           "endSequenceStartTime"=> {},
           "sourceMedium"=> {},
           "parts"=> [
+              :content_checker => :check_parts,
               :data            => {
                   "part"=> {},
                   "duration"=> {},
@@ -134,6 +135,7 @@ module MediaelementTestSpec
           ]
       },
       "nonPlayable"=> {
+          :composite_checker => :check_nonplayable,
           "reason"=> :composite,
           "messageType"=> :composite,
           "endUserMessage"=> :composite,
