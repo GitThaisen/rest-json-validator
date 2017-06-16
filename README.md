@@ -69,7 +69,7 @@ then test it by
 
 Your validator will recursively run through the specification, and return a test response to the listener. Observe the empty curly brackets, indicating we do not investigate the content of any returned values, only the api response structure.
 
-## Example og a bit more enhanced check:
+## Example including checking a response value:
 
 Change your specification (MEDIAELEMENT_CHECKS) by replacing
 
