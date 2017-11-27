@@ -1,9 +1,10 @@
 module RestJsonValidator
   class JsonValidator
 
-    def initialize
-      @stack        = []
+    def initialize(receiver: nil)
+      @stack     = []
       @listeners = []
+      @receiver  = receiver || self
     end
 
     # a listener must implement a method called notify, input string
@@ -66,15 +67,15 @@ module RestJsonValidator
 
     def run_field_validators(actual_json, specification, level)
        if is_sub_composite_checker?(specification)
-         send(specification[:sub_composite_checker], actual_json, find_id(actual_json), 'vetikke')
+         @receiver.send(specification[:sub_composite_checker], actual_json, find_id(actual_json), 'vetikke')
        else
       specification.keys.each do |api_key|
         api_element = specification[api_key]
         id          = find_id(actual_json)
         if is_field_validator?(api_element, api_key)
-          send(api_element, actual_json[api_key], id, api_key)
+          @receiver.send(api_element, actual_json[api_key], id, api_key)
         elsif is_composite_checker?(api_element)
-          send(api_element[:composite_checker], actual_json[api_key], id, api_key)
+          @receiver.send(api_element[:composite_checker], actual_json[api_key], id, api_key)
         end
       end
        end
@@ -87,7 +88,7 @@ module RestJsonValidator
     end
 
     def depth_validate_array(actual_json, specification, level, content_checker=nil)
-      send(content_checker.intern, actual_json, @media_id, level) unless content_checker.nil?
+      @receiver.send(content_checker.intern, actual_json, @media_id, level) unless content_checker.nil?
       actual_json.each do |json_element|
         validate_json_api_compliance(json_element, specification, level)
       end
